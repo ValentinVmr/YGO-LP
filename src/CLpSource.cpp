@@ -17,6 +17,7 @@ CLpSource::CLpSource(obs_data_t *pSettings, obs_source_t *pSource) {
 
 	m_mute = false;
 	m_lp = -1;
+	m_backgroundEnabled = true;
 	m_displayedLp = m_lp;
 	m_pAudioEngine = NULL;
 	m_audioLoopId = AUDIO_ENGINE_UNDEFINED_TRACK_ID;
@@ -183,6 +184,7 @@ void CLpSource::update(obs_data_t *pSettings, bool fromCtor) {
 	}
 
 	m_mute = obs_data_get_bool(pSettings, "mute");
+	m_backgroundEnabled = obs_data_get_bool(pSettings, "enable_background");
 	bool initMute = obs_data_get_bool(pSettings, "init_mute");
 	bool initMode = obs_data_get_bool(pSettings, "init_mode");
 
@@ -215,7 +217,10 @@ uint32_t CLpSource::getHeight(void) {
 }
 
 void CLpSource::videoRender(gs_effect_t *pEffect) {
-	renderImageSource(m_pSubSources[CELP_SOURCE_SUB_SOURCE_TYPES::BACKGROUND_IMAGE]);
+	if(m_backgroundEnabled) {
+	  renderImageSource(m_pSubSources[CELP_SOURCE_SUB_SOURCE_TYPES::BACKGROUND_IMAGE]);
+	}
+
 	renderTextSource(m_pSubSources[CELP_SOURCE_SUB_SOURCE_TYPES::LP_TEXT]);
 }
 
@@ -226,7 +231,7 @@ obs_properties_t *CLpSource::getProperties(void) {
 	obs_properties_add_bool(pProperties, "mute", obs_module_text("Mute"));
 	obs_properties_add_bool(pProperties, "init_mute", obs_module_text("Init mute"));
 	obs_properties_add_bool(pProperties, "init_mode", obs_module_text("Init mode"));
-
+	obs_properties_add_bool(pProperties, "enable_background", obs_module_text("Enable Background"));
 	return pProperties;
 }
 
@@ -297,6 +302,7 @@ void CLpSource::sDefaults(obs_data_t *pSettings) {
 	obs_data_set_default_bool(pSettings, "mute", false);
 	obs_data_set_default_bool(pSettings, "init_mute", false);
 	obs_data_set_default_bool(pSettings, "init_mode", true);
+	obs_data_set_default_bool(pSettings, "enable_background", true);
 }
 
 uint32_t CLpSource::sGetWidth(void *pData) {

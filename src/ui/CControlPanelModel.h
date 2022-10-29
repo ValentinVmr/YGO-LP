@@ -41,6 +41,7 @@ class CControlPanelModel {
 		virtual QString getPlayer1LpSource(void);
 		virtual void setPlayer2LpSource(const QString &lpSource);
 		virtual QString getPlayer2LpSource(void);
+		virtual void enableBackground(int state);
 		virtual void setPlayer1Lp(int value);
 		virtual int getPlayer1Lp(void);
 		virtual void setPlayer2Lp(int value);

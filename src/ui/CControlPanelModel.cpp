@@ -156,6 +156,31 @@ QString CControlPanelModel::getPlayer2LpSource(void) {
 	return m_player2LpSource;
 }
 
+void CControlPanelModel::enableBackground(const int state) {
+	obs_source_t *pPlayer1Source = getSourceByName(m_player1LpSource);
+	obs_source_t *pPlayer2Source = getSourceByName(m_player2LpSource);
+	
+	if(pPlayer1Source) {
+		obs_data_t *pPlayer1Settings = obs_source_get_settings(pPlayer1Source);
+
+		obs_data_set_bool(pPlayer1Settings, "enable_background", state == 2);
+		obs_source_update(pPlayer1Source, pPlayer1Settings);
+
+		obs_data_release(pPlayer1Settings);
+		obs_source_release(pPlayer1Source);
+	}
+
+	if(pPlayer2Source) {
+		obs_data_t *pPlayer2Settings = obs_source_get_settings(pPlayer2Source);
+
+		obs_data_set_bool(pPlayer2Settings, "enable_background", state == 2);
+		obs_source_update(pPlayer2Source, pPlayer2Settings);
+
+		obs_data_release(pPlayer2Settings);
+		obs_source_release(pPlayer2Source);
+	}
+}
+
 void CControlPanelModel::setLpSourceLp(const QString &lpSource, int value) {
 	obs_source_t *pSource = getSourceByName(lpSource);
 

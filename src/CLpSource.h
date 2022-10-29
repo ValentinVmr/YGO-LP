@@ -20,6 +20,7 @@ class CLpSource {
 		obs_source_t *m_pSource;
 		int m_lp;
 		bool m_mute;
+		bool m_backgroundEnabled;
 		obs_source_t *m_pSubSources[CELP_SOURCE_SUB_SOURCE_TYPES::N];
 		CAudioEngine *m_pAudioEngine;
 		int m_displayedLp;

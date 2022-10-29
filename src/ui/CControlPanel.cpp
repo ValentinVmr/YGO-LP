@@ -5,6 +5,7 @@
 #include <QtWidgets/QFileDialog>
 #include <QtGui/QGuiApplication>
 #include <QtGui/QScreen>
+#include <QCheckBox>
 
 CControlPanel::CControlPanel(QWidget *parent) : QMainWindow(parent) {
 	m_pModel = new CControlPanelModel();
@@ -14,52 +15,55 @@ CControlPanel::CControlPanel(QWidget *parent) : QMainWindow(parent) {
 	}
 
 	resize(688, 803);
+
+	// Create central widget
 	centralwidget = new QWidget(this);
 	centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
 	verticalLayout = new QVBoxLayout(centralwidget);
 	verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
+
+	// Create OBS Sources box
 	OBSSources = new QGroupBox(centralwidget);
 	OBSSources->setObjectName(QString::fromUtf8("OBSSources"));
 	formLayout_2 = new QFormLayout(OBSSources);
 	formLayout_2->setObjectName(QString::fromUtf8("formLayout_2"));
 	label_2 = new QLabel(OBSSources);
 	label_2->setObjectName(QString::fromUtf8("label_2"));
-
 	formLayout_2->setWidget(0, QFormLayout::LabelRole, label_2);
-
 	comboBoxMainSource = new QComboBox(OBSSources);
 	comboBoxMainSource->setObjectName(QString::fromUtf8("comboBoxMainSource"));
-
 	formLayout_2->setWidget(0, QFormLayout::FieldRole, comboBoxMainSource);
-
 	label_3 = new QLabel(OBSSources);
 	label_3->setObjectName(QString::fromUtf8("label_3"));
-
 	formLayout_2->setWidget(1, QFormLayout::LabelRole, label_3);
-
 	comboBoxPlayer1LpSource = new QComboBox(OBSSources);
 	comboBoxPlayer1LpSource->setObjectName(QString::fromUtf8("comboBoxPlayer1LpSource"));
-
 	formLayout_2->setWidget(1, QFormLayout::FieldRole, comboBoxPlayer1LpSource);
-
 	label_4 = new QLabel(OBSSources);
 	label_4->setObjectName(QString::fromUtf8("label_4"));
-
 	formLayout_2->setWidget(2, QFormLayout::LabelRole, label_4);
-
 	comboBoxPlayer2LpSource = new QComboBox(OBSSources);
 	comboBoxPlayer2LpSource->setObjectName(QString::fromUtf8("comboBoxPlayer2LpSource"));
-
 	formLayout_2->setWidget(2, QFormLayout::FieldRole, comboBoxPlayer2LpSource);
-
 	pushButtonRefresh = new QPushButton(OBSSources);
 	pushButtonRefresh->setObjectName(QString::fromUtf8("pushButtonRefresh"));
-
 	formLayout_2->setWidget(3, QFormLayout::SpanningRole, pushButtonRefresh);
-
-
 	verticalLayout->addWidget(OBSSources);
 
+	// Create configuration box
+	ConfigurationBox = new QGroupBox(centralwidget);
+	ConfigurationBox->setObjectName(QString::fromUtf8("Configuration"));
+	configurationLayout = new QFormLayout(ConfigurationBox);
+	configurationLayout->setObjectName(QString::fromUtf8("configurationLayout"));
+	enableBackgroundLabel = new QLabel(ConfigurationBox);
+	enableBackgroundLabel->setObjectName(QString::fromUtf8("enableBackgroundLabel"));
+	enableBackgroundCheckbox = new QCheckbox(ConfigurationBox);
+	enableBackgroundCheckbox->setObjectName(QString::fromUtf8("enableBackgroundCheckbox"));
+	configurationLayout->setWidget(0, QFormLayout::LabelRole, enableBackgroundLabel);
+	configurationLayout->setWidget(0, QFormLayout::FieldRole, enableBackgroundCheckbox);
+	verticalLayout->addWidget(ConfigurationBox);
+
+	// Create Players box
 	Players = new QGroupBox(centralwidget);
 	Players->setObjectName(QString::fromUtf8("Players"));
 	verticalLayout_12 = new QVBoxLayout(Players);
@@ -261,6 +265,7 @@ CControlPanel::CControlPanel(QWidget *parent) : QMainWindow(parent) {
 	label_2->setText("YuGiOhMainSource:");
 	label_3->setText("Player 1 YuGiOhLpSource:");
 	label_4->setText("Player 2 YuGiOhLpSource:");
+	enableBackgroundLabel->setText("Enable background Image")
 	pushButtonRefresh->setText("Refresh");
 	Players->setTitle("Players");
 	pushButtonInitializeLp->setText("Initialize LP");
@@ -295,6 +300,8 @@ CControlPanel::CControlPanel(QWidget *parent) : QMainWindow(parent) {
     connect(comboBoxMainSource, &QComboBox::currentTextChanged, this, &CControlPanel::onComboBoxMainSourceChanged);
     connect(comboBoxPlayer1LpSource, &QComboBox::currentTextChanged, this, &CControlPanel::onComboBoxPlayer1LpSourceChanged);
     connect(comboBoxPlayer2LpSource, &QComboBox::currentTextChanged, this, &CControlPanel::onComboBoxPlayer2LpSourceChanged);
+
+	connect(enableBackgroundCheckbox, &QCheckbox::stateChanged, this, &CControlPanel::onEnableBackgroundChanged);
 
     connect(pushButtonInitializeLp, &QPushButton::clicked, this, &CControlPanel::onPushButtonInitializeLpClicked);
     connect(pushButtonClearLp, &QPushButton::clicked, this, &CControlPanel::onPushButtonClearLpClicked);
@@ -385,6 +392,10 @@ void CControlPanel::onComboBoxPlayer1LpSourceChanged(const QString &value) {
 void CControlPanel::onComboBoxPlayer2LpSourceChanged(const QString &value) {
 	m_pModel->setPlayer2LpSource(value);
 	spinBoxPlayer2Lp->setValue(m_pModel->getPlayer2Lp());
+}
+
+void CControlPanel::onEnableBackgroundChanged(const int state) {
+	m_pModel->enableBackground(state);
 }
 
 bool CControlPanel::requestValue(const QString &title, int initValue, int *pValue) {

@@ -8,6 +8,7 @@
 #include <QGroupBox>
 #include <QFormLayout>
 #include <QLabel>
+#include <QCheckBox>
 #include <QComboBox>
 #include <QSpinBox>
 #include <QLineEdit>
@@ -27,6 +28,12 @@ class CControlPanel : public QMainWindow {
 		QLabel *label_4;
 		QComboBox *comboBoxPlayer2LpSource;
 		QPushButton *pushButtonRefresh;
+
+		QGroupBox *ConfigurationBox;
+		QFormLayout *configurationLayout;
+		QCheckbox *enableBackgroundCheckbox;
+		QLabel *enableBackgroundLabel;
+
 		QGroupBox *Players;
 		QVBoxLayout *verticalLayout_12;
 		QPushButton *pushButtonInitializeLp;
